@@ -54,9 +54,12 @@ defmodule BadwithdatesWeb.Router do
       on_mount: [{BadwithdatesWeb.UserAuth, :require_authenticated}] do
       live "/users/settings", UserLive.Settings, :edit
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
+      live "/calendar", CalendarLive.Year, :index
+      live "/calendar/:year", CalendarLive.Year, :index
     end
 
     post "/users/update-password", UserSessionController, :update_password
+    resources "/events", EventController
   end
 
   scope "/", BadwithdatesWeb do

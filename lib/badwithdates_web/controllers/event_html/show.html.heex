@@ -1,0 +1,21 @@
+<Layouts.app flash={@flash} current_scope={@current_scope}>
+  <.header>
+    Event {@event.id}
+    <:subtitle>This is a event record from your database.</:subtitle>
+    <:actions>
+      <.button navigate={~p"/events"}>
+        <.icon name="hero-arrow-left" />
+      </.button>
+      <.button variant="primary" navigate={~p"/events/#{@event}/edit?return_to=show"}>
+        <.icon name="hero-pencil-square" /> Edit event
+      </.button>
+    </:actions>
+  </.header>
+
+  <.list>
+    <:item title="Title">{@event.title}</:item>
+    <:item title="Date">{@event.date}</:item>
+    <:item title="Category">{@event.category}</:item>
+    <:item title="Description">{@event.description}</:item>
+  </.list>
+</Layouts.app>

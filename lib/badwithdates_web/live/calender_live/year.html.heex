@@ -1,0 +1,121 @@
+<div class="calendar-container p-6 max-w-7xl mx-auto">
+  <!-- Year Selector -->
+  <div class="mb-8 text-center">
+    <h1 class="text-3xl font-bold text-white-800 mb-4">Events Calendar</h1>
+    
+    <div class="flex items-center justify-center gap-4">
+      <button 
+        phx-click="year_selected" 
+        phx-value-year={@selected_year - 1}
+        class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+      >
+        ← <%= @selected_year - 1 %>
+      </button>
+      
+      <div class="text-2xl font-semibold text-gray-700">
+        <%= @selected_year %>
+      </div>
+      
+      <button 
+        phx-click="year_selected" 
+        phx-value-year={@selected_year + 1}
+        class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+      >
+        <%= @selected_year + 1 %> →
+      </button>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div class="mb-6 flex justify-center gap-8">
+    <div class="flex items-center gap-2">
+      <div class="w-4 h-4 border-2 border-red-500 rounded-full"></div>
+      <span class="text-sm text-gray-600">Birthday</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <div class="w-4 h-4 border-2 border-green-500 rounded-full"></div>
+      <span class="text-sm text-gray-600">Anniversary</span>
+    </div>
+  </div>
+
+  <!-- Calendar Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <%= for month_data <- @calendar_months do %>
+      <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+        <!-- Month Header -->
+        <div class="bg-gray-100 px-4 py-3 text-center">
+          <h2 class="text-lg font-semibold text-gray-800">
+            <%= case month_data.month do
+              1 -> "January"
+              2 -> "February"
+              3 -> "March"
+              4 -> "April"
+              5 -> "May"
+              6 -> "June"
+              7 -> "July"
+              8 -> "August"
+              9 -> "September"
+              10 -> "October"
+              11 -> "November"
+              12 -> "December"
+            end %>
+          </h2>
+        </div>
+        
+        <!-- Days of Week Header -->
+        <div class="grid grid-cols-7 bg-gray-50">
+          <%= for day <- ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"] do %>
+            <div class="p-2 text-xs font-medium text-gray-500 text-center">
+              <%= day %>
+            </div>
+          <% end %>
+        </div>
+        
+        <!-- Calendar Days -->
+        <div class="grid grid-cols-7">
+          <%= for day_data <- month_data.days do %>
+            <%= if day_data do %>
+              <div class="relative p-2 h-12 border-r border-b border-gray-100 flex items-center justify-center hover:bg-gray-50 transition-colors">
+                <!-- Day Number -->
+                <span class="text-sm text-gray-700 z-10 relative">
+                  <%= day_data.day %>
+                </span>
+                
+                <!-- Event Indicators -->
+                <%= if day_data.has_birthday do %>
+                  <div class="absolute inset-1 border-2 border-red-500 rounded-full pointer-events-none"></div>
+                <% end %>
+                
+                <%= if day_data.has_anniversary do %>
+                  <div class="absolute inset-1 border-2 border-green-500 rounded-full pointer-events-none"></div>
+                <% end %>
+                
+                <!-- Tooltip for events -->
+                <%= if length(day_data.events) > 0 do %>
+                  <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none">
+                    <%= for event <- day_data.events do %>
+                      <div><%= event.title %> (<%= event.category %>)</div>
+                    <% end %>
+                  </div>
+                <% end %>
+              </div>
+            <% else %>
+              <!-- Empty cell for padding -->
+              <div class="p-2 h-12 border-r border-b border-gray-100"></div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<style>
+  .calendar-container .relative:hover .absolute {
+    opacity: 1;
+  }
+  
+  .group:hover .group-hover\:opacity-100 {
+    opacity: 1 !important;
+  }
+</style>

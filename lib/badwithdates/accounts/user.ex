@@ -8,6 +8,7 @@ defmodule Badwithdates.Accounts.User do
     field :hashed_password, :string, redact: true
     field :confirmed_at, :utc_datetime
     field :authenticated_at, :utc_datetime, virtual: true
+    has_many :events, Badwithdates.Events.Event
 
     timestamps(type: :utc_datetime)
   end

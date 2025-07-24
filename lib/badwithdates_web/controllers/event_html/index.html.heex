@@ -1,0 +1,28 @@
+<Layouts.app flash={@flash} current_scope={@current_scope}>
+  <.header>
+    Listing Events
+    <:actions>
+      <.button href={~p"/events/new"}>
+        <.icon name="hero-plus" /> New Event
+      </.button>
+    </:actions>
+  </.header>
+
+  <.table id="events" rows={@events} row_click={&JS.navigate(~p"/events/#{&1}")}>
+    <:col :let={event} label="Title">{event.title}</:col>
+    <:col :let={event} label="Date">{event.date}</:col>
+    <:col :let={event} label="Category">{event.category}</:col>
+    <:col :let={event} label="Description">{event.description}</:col>
+    <:action :let={event}>
+      <div class="sr-only">
+        <.link navigate={~p"/events/#{event}"}>Show</.link>
+      </div>
+      <.link navigate={~p"/events/#{event}/edit"}>Edit</.link>
+    </:action>
+    <:action :let={event}>
+      <.link href={~p"/events/#{event}"} method="delete" data-confirm="Are you sure?">
+        Delete
+      </.link>
+    </:action>
+  </.table>
+</Layouts.app>

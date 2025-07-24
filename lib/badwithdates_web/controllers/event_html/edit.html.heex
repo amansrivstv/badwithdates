@@ -1,0 +1,8 @@
+<Layouts.app flash={@flash} current_scope={@current_scope}>
+  <.header>
+    Edit Event {@event.id}
+    <:subtitle>Use this form to manage event records in your database.</:subtitle>
+  </.header>
+
+  <.event_form changeset={@changeset} action={~p"/events/#{@event}"} return_to={~p"/events"} />
+</Layouts.app>
