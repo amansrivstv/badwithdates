@@ -44,7 +44,6 @@ defmodule BadwithdatesWeb.CoreComponents do
   attr :title, :string, default: nil
   attr :kind, :atom, values: [:info, :error], doc: "used for styling and flash lookup"
   attr :rest, :global, doc: "the arbitrary HTML attributes to add to the flash container"
-
   slot :inner_block, doc: "the optional inner block that renders the flash message"
 
   def flash(assigns) do
@@ -91,6 +90,8 @@ defmodule BadwithdatesWeb.CoreComponents do
   attr :rest, :global, include: ~w(href navigate patch)
   attr :variant, :string, values: ~w(primary)
   slot :inner_block, required: true
+  attr :value, :string, default: "false"
+  attr :name, :string, default: nil
 
   def button(%{rest: rest} = assigns) do
     variants = %{"primary" => "btn-primary", nil => "btn-primary btn-soft"}
