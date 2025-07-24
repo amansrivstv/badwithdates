@@ -71,7 +71,8 @@ defmodule BadwithdatesWeb.Router do
       live "/users/log-in", UserLive.Login, :new
       live "/users/log-in/:token", UserLive.Confirmation, :new
     end
-
+    get "/about",  AboutController, :about
+    get "/resume", PageController, :resume
     post "/users/log-in", UserSessionController, :create
     delete "/users/log-out", UserSessionController, :delete
   end
