@@ -75,7 +75,8 @@
         <div class="grid grid-cols-7">
           <%= for day_data <- month_data.days do %>
             <%= if day_data do %>
-              <div class="relative p-2 h-12 border-r border-b border-gray-100 flex items-center justify-center hover:bg-gray-50 transition-colors">
+              <div class="relative p-2 h-12 border-r border-b border-gray-100 flex items-center justify-center hover:bg-gray-50 transition-colors group cursor-pointer"
+                   onclick={"window.open('/events')"}>
                 <!-- Day Number -->
                 <span class="text-sm text-gray-700 z-10 relative">
                   <%= day_data.day %>
@@ -92,10 +93,26 @@
                 
                 <!-- Tooltip for events -->
                 <%= if length(day_data.events) > 0 do %>
-                  <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none">
+                  <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none max-w-xs">
+                    <div class="font-semibold mb-1 text-center">
+                      <%= Calendar.strftime(day_data.date, "%B %d") %>
+                    </div>
                     <%= for event <- day_data.events do %>
-                      <div><%= event.title %> (<%= event.category %>)</div>
+                      <div class="flex items-center justify-between py-1 border-b border-gray-600 last:border-b-0">
+                        <div class="flex items-center gap-2">
+                          <%= if event.category == :birthday do %>
+                            <div class="w-2 h-2 bg-red-500 rounded-full"></div>
+                          <% else %>
+                            <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                          <% end %>
+                          <span class="text-white"><%= event.title %></span>
+                        </div>
+                        <span class="text-gray-300 text-xs capitalize ml-2"><%= event.category %></span>
+                      </div>
                     <% end %>
+                    <div class="text-center text-gray-400 text-xs mt-2 pt-1 border-t border-gray-600">
+                      Click to manage events
+                    </div>
                   </div>
                 <% end %>
               </div>
@@ -111,11 +128,23 @@
 </div>
 
 <style>
-  .calendar-container .relative:hover .absolute {
-    opacity: 1;
+  .calendar-container .group:hover .group-hover\:opacity-100 {
+    opacity: 1 !important;
   }
   
-  .group:hover .group-hover\:opacity-100 {
-    opacity: 1 !important;
+  .group:hover .z-20 {
+    z-index: 50;
+  }
+  
+  /* Better tooltip positioning */
+  .group .absolute.bottom-full {
+    display: block;
+  }
+  
+  /* Responsive tooltip width */
+  @media (max-width: 768px) {
+    .max-w-xs {
+      max-width: 200px;
+    }
   }
 </style>
