@@ -310,7 +310,8 @@ defmodule Badwithdates.Events do
     else
       {:error, "Invalid category: #{category_atom}"}
     end
-=======
+  end
+
   def get_events_for_month_day(month, day) do
     from(e in Event,
       where: fragment("EXTRACT(month FROM ?)", e.date) == ^month,
