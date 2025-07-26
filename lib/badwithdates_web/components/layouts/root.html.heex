@@ -27,11 +27,14 @@
       })();
     </script>
   </head>
-  <body>
+  <body class="h-full flex flex-col">
     <ul class="menu menu-horizontal w-full relative z-10 flex items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end">
       <%= if @current_scope do %>
         <li>
           {@current_scope.user.email}
+        </li>
+        <li>
+          <.link href={~p"/calendar"}>Calendar</.link>
         </li>
         <li>
           <.link href={~p"/users/settings"}>Settings</.link>
@@ -48,19 +51,26 @@
         </li>
       <% end %>
     </ul>
-    {@inner_content}
-
+    <main class="flex-1 container mx-auto px-4 py-6 w-full max-w-7xl">
+      {@inner_content}
+    </main>
     <footer class="bg-gray-50 border-t border-gray-200 mt-auto">
       <div class="container mx-auto px-4 py-8">
         <div class="flex flex-col md:flex-row justify-between items-center">
           <p class="text-gray-600 text-sm mb-4 md:mb-0">
-            Bad With Dates (&copy; pending) 2025. All rights !reserved.
+            Bad With Dates ~(&copy; 2025). All rights !reserved.
           </p>
           <nav class="flex space-x-6">
-            <a href={~p"/about"} class="text-gray-600 hover:text-gray-800 text-sm transition-colors">
-              About
+            <a
+              href={~p"/about"}
+              class="text-gray-600 hover:text-gray-800 text-sm transition-colors"
+            >
+              About Me
             </a>
-            <a href="https://github.com/amansrivstv/badwithdates" class="text-gray-600 hover:text-gray-800 text-sm transition-colors">
+            <a
+              href="https://github.com/amansrivstv/badwithdates"
+              class="text-gray-600 hover:text-gray-800 text-sm transition-colors"
+            >
               Github
             </a>
           </nav>
