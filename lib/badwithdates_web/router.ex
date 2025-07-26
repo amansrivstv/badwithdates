@@ -63,6 +63,9 @@ defmodule BadwithdatesWeb.Router do
     end
 
     post "/users/update-password", UserSessionController, :update_password
+    get "/events/export", EventController, :export
+    get "/events/import", EventController, :import_form
+    post "/events/import", EventController, :import
     resources "/events", EventController
   end
 

@@ -8,6 +8,7 @@ defmodule Badwithdates.Events do
 
   alias Badwithdates.Events.Event
   alias Badwithdates.Accounts.Scope
+  alias Elixlsx.{Workbook, Sheet}
   alias Badwithdates.Events.ReminderLog
 
   @doc """
@@ -204,6 +205,112 @@ defmodule Badwithdates.Events do
     )
     |> Repo.all()
   end
+
+  def export_events_to_excel(%Scope{} = scope) do
+    events = list_events(scope)
+    cleaned_data =
+      events
+      |> Enum.map(fn event ->
+        [
+          event.title,
+          Date.to_string(event.date),
+          Atom.to_string(event.category),
+          event.description || ""
+        ]
+      end)
+
+    # Create Excel workbook
+    workbook = %Workbook{
+      sheets: [
+        %Sheet{
+          name: "Events",
+          rows:
+            [
+              # Header row
+              ["Title", "Date", "Category", "Description"]
+            ] ++ cleaned_data
+        }
+      ]
+    }
+    {:ok, {_filename, binary_data}} = Elixlsx.write_to_memory(workbook, "events.xlsx")
+    binary_data
+  end
+
+  # Import events from Excel file
+  def import_events_from_excel(%Scope{} = scope, file_path) do
+    try do
+      # Extract data from Excel file
+      {:ok, data} = Xlsxir.extract(file_path, 0)
+
+      # Get all rows except header
+      rows = Xlsxir.get_list(data)
+      [_header | data_rows] = rows
+      # Close the extraction process
+      Xlsxir.close(data)
+
+      # Process each row
+      results =
+        Enum.map(data_rows, fn row ->
+          case parse_excel_row(row) do
+            {:ok, event_attrs} ->
+              create_event(scope, event_attrs)
+
+            {:error, reason} ->
+              {:error, reason}
+          end
+        end)
+
+      # Count successes and failures
+      successes = Enum.count(results, fn {status, _} -> status == :ok end)
+      failures = Enum.count(results, fn {status, _} -> status == :error end)
+
+      {:ok, %{successes: successes, failures: failures, details: results}}
+    rescue
+      error ->
+        {:error, "Failed to process Excel file: #{inspect(error)}"}
+    end
+  end
+
+  # Parse a single Excel row into event attributes
+  defp parse_excel_row([title, date, category_str, description]) do
+    with {:ok, category} <- parse_category(category_str) do
+      {:ok,
+       %{
+         title: to_string(title),
+         date: date,
+         category: category,
+         description: if(description && description != "", do: to_string(description), else: nil)
+       }}
+    else
+      {:error, reason} -> {:error, reason}
+    end
+  end
+
+  defp parse_excel_row(row) do
+    {:error, "Invalid row format: expected 4 columns, got #{length(row)}"}
+  end
+
+  # Parse category
+  defp parse_category(category_str) when is_binary(category_str) do
+    category_atom = String.downcase(category_str) |> String.to_existing_atom()
+
+    if category_atom in [:anniversary, :birthday] do
+      {:ok, category_atom}
+    else
+      {:error, "Invalid category: #{category_str}. Must be 'anniversary' or 'birthday'"}
+    end
+  rescue
+    ArgumentError ->
+      {:error, "Invalid category: #{category_str}. Must be 'anniversary' or 'birthday'"}
+  end
+
+  defp parse_category(category_atom) when is_atom(category_atom) do
+    if category_atom in [:anniversary, :birthday] do
+      {:ok, category_atom}
+    else
+      {:error, "Invalid category: #{category_atom}"}
+    end
+=======
   def get_events_for_month_day(month, day) do
     from(e in Event,
       where: fragment("EXTRACT(month FROM ?)", e.date) == ^month,
