@@ -62,7 +62,10 @@ defmodule Badwithdates.MixProject do
       {:bandit, "~> 1.5"},
       {:xlsxir, "~> 1.6"},
       {:elixlsx, "~> 0.5.1"},
-      {:timex, "~> 3.7"}
+      {:timex, "~> 3.7"},
+      {:oban, "~> 2.19"},
+      {:igniter, "~> 0.5", only: [:dev]},
+      {:oban_web, "~> 2.11"}
     ]
   end
 

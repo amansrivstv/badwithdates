@@ -11,6 +11,7 @@ defmodule Badwithdates.Application do
       BadwithdatesWeb.Telemetry,
       Badwithdates.Repo,
       {DNSCluster, query: Application.get_env(:badwithdates, :dns_cluster_query) || :ignore},
+      {Oban, Application.fetch_env!(:badwithdates, Oban)},
       {Phoenix.PubSub, name: Badwithdates.PubSub},
       # Start a worker by calling: Badwithdates.Worker.start_link(arg)
       # {Badwithdates.Worker, arg},

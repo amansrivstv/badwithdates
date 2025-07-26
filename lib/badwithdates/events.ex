@@ -9,6 +9,7 @@ defmodule Badwithdates.Events do
   alias Badwithdates.Events.Event
   alias Badwithdates.Accounts.Scope
   alias Elixlsx.{Workbook, Sheet}
+  alias Badwithdates.Events.ReminderLog
 
   @doc """
   Subscribes to scoped notifications about any event changes.
@@ -309,5 +310,34 @@ defmodule Badwithdates.Events do
     else
       {:error, "Invalid category: #{category_atom}"}
     end
+=======
+  def get_events_for_month_day(month, day) do
+    from(e in Event,
+      where: fragment("EXTRACT(month FROM ?)", e.date) == ^month,
+      where: fragment("EXTRACT(day FROM ?)", e.date) == ^day,
+      preload: [:user]
+    )
+    |> Repo.all()
+  end
+
+  # Check if a reminder was already sent
+  def reminder_already_sent?(event_id, year, reminder_type) do
+    from(r in ReminderLog,
+      where: r.event_id == ^event_id,
+      where: r.year == ^year,
+      where: r.reminder_type == ^reminder_type
+    )
+    |> Repo.exists?()
+  end
+
+  # Record that a reminder was sent
+  def record_reminder_sent(event_id, year, reminder_type) do
+    %ReminderLog{
+      event_id: event_id,
+      year: year,
+      reminder_type: reminder_type,
+      sent_at: DateTime.utc_now()
+    }
+    |> Repo.insert()
   end
 end
