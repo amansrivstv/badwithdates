@@ -1,7 +1,9 @@
 defmodule BadwithdatesWeb.Router do
   use BadwithdatesWeb, :router
 
+  import Oban.Web.Router
   import BadwithdatesWeb.UserAuth
+
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -42,6 +44,8 @@ defmodule BadwithdatesWeb.Router do
 
       live_dashboard "/dashboard", metrics: BadwithdatesWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
+      oban_dashboard("/oban")
+
     end
   end
 
@@ -54,9 +58,15 @@ defmodule BadwithdatesWeb.Router do
       on_mount: [{BadwithdatesWeb.UserAuth, :require_authenticated}] do
       live "/users/settings", UserLive.Settings, :edit
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
+      live "/calendar", CalendarLive.Year, :index
+      live "/calendar/:year", CalendarLive.Year, :index
     end
 
     post "/users/update-password", UserSessionController, :update_password
+    get "/events/export", EventController, :export
+    get "/events/import", EventController, :import_form
+    post "/events/import", EventController, :import
+    resources "/events", EventController
   end
 
   scope "/", BadwithdatesWeb do
@@ -69,6 +79,8 @@ defmodule BadwithdatesWeb.Router do
       live "/users/log-in/:token", UserLive.Confirmation, :new
     end
 
+    get "/about", AboutController, :about
+    get "/resume", PageController, :resume
     post "/users/log-in", UserSessionController, :create
     delete "/users/log-out", UserSessionController, :delete
   end

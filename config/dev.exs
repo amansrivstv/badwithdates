@@ -29,6 +29,21 @@ config :badwithdates, BadwithdatesWeb.Endpoint,
     tailwind: {Tailwind, :install_and_run, [:badwithdates, ~w(--watch)]}
   ]
 
+
+config :badwithdates, Oban,
+  repo: Badwithdates.Repo,
+  plugins: [
+    Oban.Plugins.Pruner,
+    {Oban.Plugins.Cron,
+     crontab: [
+      #  Run every minute for testing (comment out for normal dev)
+       {"* * * * *", Badwithdates.Workers.ReminderScheduler},
+
+      #  # Normal daily run at 9 AM
+      #  {"0 9 * * *", Badwithdates.Workers.ReminderScheduler}
+     ]}
+  ],
+  queues: [reminders: 10, default: 10]
 # ## SSL Support
 #
 # In order to use HTTPS in development, a self-signed

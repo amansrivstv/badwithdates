@@ -7,6 +7,23 @@
 # General application configuration
 import Config
 
+config :badwithdates, Oban,
+  repo: Badwithdates.Repo,
+  engine: Oban.Engines.Basic,
+  notifier: Oban.Notifiers.Postgres,
+  queues: [default: 10],
+  repo: Badwithdates.Repo,
+  plugins: [
+    Oban.Plugins.Pruner,
+    {Oban.Plugins.Cron,
+     crontab: [
+       # Run daily at 9 AM
+       {"0 9 * * *", Badwithdates.Workers.ReminderScheduler}
+     ]}
+  ],
+  queues: [reminders: 10, default: 10]
+
+
 config :badwithdates, :scopes,
   user: [
     default: true,
@@ -36,12 +53,6 @@ config :badwithdates, BadwithdatesWeb.Endpoint,
   live_view: [signing_salt: "/DrPmkSR"]
 
 # Configures the mailer
-#
-# By default it uses the "Local" adapter which stores the emails
-# locally. You can see the emails in your browser, at "/dev/mailbox".
-#
-# For production it's recommended to configure a different adapter
-# at the `config/runtime.exs`.
 config :badwithdates, Badwithdates.Mailer, adapter: Swoosh.Adapters.Local
 
 # Configure esbuild (the version is required)

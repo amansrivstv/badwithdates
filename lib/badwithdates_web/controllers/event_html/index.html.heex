@@ -1,0 +1,231 @@
+<Layouts.app flash={@flash} current_scope={@current_scope}>
+  <.header class="mb-6">
+    My Events
+    <:subtitle>Get notified for all your important dates</:subtitle>
+    <:actions>
+      <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
+        <.link
+          href={~p"/events/export"}
+          class="inline-flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white px-3 sm:px-4 py-2 rounded-lg transition-colors duration-200 shadow-sm text-sm"
+        >
+          <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+            />
+          </svg>
+          <span class="hidden sm:inline">Download Excel</span>
+          <span class="sm:hidden">Download</span>
+        </.link>
+
+        <.link
+          href={~p"/events/import"}
+          class="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-3 sm:px-4 py-2 rounded-lg transition-colors duration-200 shadow-sm text-sm"
+        >
+          <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+            />
+          </svg>
+          <span class="hidden sm:inline">Upload Excel</span>
+          <span class="sm:hidden">Upload</span>
+        </.link>
+
+        <.link
+          href={~p"/events/new"}
+          class="inline-flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-3 sm:px-4 py-2 rounded-lg transition-colors duration-200 shadow-sm text-sm"
+        >
+          <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 4v16m8-8H4"
+            />
+          </svg>
+          <span class="hidden sm:inline">New Event</span>
+          <span class="sm:hidden">New</span>
+        </.link>
+      </div>
+    </:actions>
+  </.header>
+  
+<!-- Events Content -->
+  <div class="bg-white shadow-sm border border-gray-200 rounded-lg overflow-hidden">
+    <%= if @events == [] do %>
+      <div class="text-center py-8 sm:py-12 px-4">
+        <svg
+          class="mx-auto h-10 w-10 sm:h-12 sm:w-12 text-gray-300"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 00-2 2v12a2 2 0 002 2z"
+          />
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-gray-900">No events yet</h3>
+        <p class="mt-1 text-sm text-gray-500 max-w-sm mx-auto">
+          Get started by creating your first event or uploading an Excel file.
+        </p>
+        <div class="mt-6 flex flex-col sm:flex-row justify-center gap-3">
+          <.link
+            href={~p"/events/new"}
+            class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 text-sm"
+          >
+            Add Event
+          </.link>
+          <.link
+            href={~p"/events/import"}
+            class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-sm"
+          >
+            Upload Excel
+          </.link>
+        </div>
+      </div>
+    <% else %>
+      <!-- Mobile Card View -->
+      <div class="block sm:hidden">
+        <%= for event <- @events do %>
+          <div class="border-b border-gray-200 p-4 hover:bg-gray-50">
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="text-sm font-medium text-gray-900 flex-1 pr-2">
+                {event.title}
+              </h3>
+              <span class={[
+                "inline-flex px-2 py-1 text-xs font-medium rounded-full flex-shrink-0",
+                event.category == :birthday && "bg-pink-100 text-pink-700",
+                event.category == :anniversary && "bg-purple-100 text-purple-700"
+              ]}>
+                {Phoenix.Naming.humanize(event.category)}
+              </span>
+            </div>
+
+            <p class="text-sm text-gray-500 mb-2">
+              {Calendar.strftime(event.date, "%B %d, %Y")}
+            </p>
+
+            <%= if event.description do %>
+              <p class="text-sm text-gray-500 mb-3 line-clamp-2">
+                {event.description}
+              </p>
+            <% end %>
+
+            <div class="flex justify-end space-x-3">
+              <.link
+                href={~p"/events/#{event}"}
+                class="text-indigo-600 hover:text-indigo-900 text-sm"
+              >
+                View
+              </.link>
+              <.link
+                href={~p"/events/#{event}/edit"}
+                class="text-blue-600 hover:text-blue-900 text-sm"
+              >
+                Edit
+              </.link>
+              <.link
+                href={~p"/events/#{event}"}
+                method="delete"
+                data-confirm="Are you sure?"
+                class="text-red-600 hover:text-red-900 text-sm"
+              >
+                Delete
+              </.link>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      
+<!-- Desktop Table View -->
+      <div class="hidden sm:block overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Title
+              </th>
+              <th class="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Date
+              </th>
+              <th class="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Category
+              </th>
+              <th class="hidden lg:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Description
+              </th>
+              <th class="px-4 lg:px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <%= for event <- @events do %>
+              <tr class="hover:bg-gray-50">
+                <td class="px-4 lg:px-6 py-4 text-sm font-medium text-gray-900">
+                  <div class="max-w-xs truncate">
+                    {event.title}
+                  </div>
+                </td>
+                <td class="px-4 lg:px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <div class="hidden md:block">
+                    {Calendar.strftime(event.date, "%B %d, %Y")}
+                  </div>
+                  <div class="md:hidden">
+                    {Calendar.strftime(event.date, "%m/%d/%Y")}
+                  </div>
+                </td>
+                <td class="px-4 lg:px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <span class={[
+                    "inline-flex px-2 py-1 text-xs font-medium rounded-full",
+                    event.category == :birthday && "bg-pink-100 text-pink-700",
+                    event.category == :anniversary && "bg-purple-100 text-purple-700"
+                  ]}>
+                    {Phoenix.Naming.humanize(event.category)}
+                  </span>
+                </td>
+                <td class="hidden lg:table-cell px-6 py-4 text-sm text-gray-500">
+                  <div class="max-w-xs truncate">
+                    {event.description}
+                  </div>
+                </td>
+                <td class="px-4 lg:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <div class="flex justify-end space-x-2">
+                    <.link
+                      href={~p"/events/#{event}"}
+                      class="text-indigo-600 hover:text-indigo-900"
+                    >
+                      View
+                    </.link>
+                    <.link
+                      href={~p"/events/#{event}/edit"}
+                      class="text-blue-600 hover:text-blue-900"
+                    >
+                      Edit
+                    </.link>
+                    <.link
+                      href={~p"/events/#{event}"}
+                      method="delete"
+                      data-confirm="Are you sure?"
+                      class="text-red-600 hover:text-red-900"
+                    >
+                      Delete
+                    </.link>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% end %>
+  </div>
+</Layouts.app>
