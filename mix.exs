@@ -59,7 +59,10 @@ defmodule Badwithdates.MixProject do
       {:gettext, "~> 0.26"},
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
-      {:bandit, "~> 1.5"}
+      {:bandit, "~> 1.5"},
+      {:xlsxir, "~> 1.6"},
+      {:elixlsx, "~> 0.5.1"},
+      {:timex, "~> 3.7"}
     ]
   end
 

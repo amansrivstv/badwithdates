@@ -63,4 +63,68 @@ defmodule BadwithdatesWeb.EventController do
     |> put_flash(:info, "Event deleted successfully.")
     |> redirect(to: ~p"/events")
   end
+
+  def export(conn, _params) do
+    # Create scope for the current user
+    try do
+      binary_data =
+        Events.export_events_to_excel(conn.assigns.current_scope)
+      conn
+      |> put_resp_header("content-disposition", "attachment; filename=export.xlsx")
+      |> put_resp_content_type(
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      )
+      |> send_resp(200, binary_data)
+    rescue
+      error ->
+        conn
+        |> put_flash(:error, "Failed to export events: #{inspect(error)}")
+        |> redirect(to: ~p"/events")
+    end
+  end
+
+  # Show import form
+  def import_form(conn, _params) do
+    render(conn, :import_form)
+  end
+
+  # Handle file upload and import
+  def import(conn, %{"upload" => upload_params}) do
+    case upload_params do
+      %Plug.Upload{path: temp_path, filename: filename} ->
+        # Validate file extension
+        if Path.extname(filename) in [".xlsx", ".xls"] do
+          # Create scope for the current user
+          case Events.import_events_from_excel(conn.assigns.current_scope, temp_path) do
+            {:ok, %{successes: successes, failures: failures}} ->
+              message = "Import completed! #{successes} events imported successfully"
+              message = if failures > 0, do: "#{message}, #{failures} failed", else: message
+
+              conn
+              |> put_flash(:info, message)
+              |> redirect(to: ~p"/events")
+
+            {:error, reason} ->
+              conn
+              |> put_flash(:error, "Import failed: #{reason}")
+              |> render(:import_form)
+          end
+        else
+          conn
+          |> put_flash(:error, "Please upload an Excel file (.xlsx or .xls)")
+          |> render(:import_form)
+        end
+
+      _ ->
+        conn
+        |> put_flash(:error, "Please select a file to upload")
+        |> render(:import_form)
+    end
+  end
+
+  def import(conn, _params) do
+    conn
+    |> put_flash(:error, "Please select a file to upload")
+    |> render(:import_form)
+  end
 end
