@@ -37,4 +37,7 @@ npm-debug.log
 
 #env
 .env
+fly.toml
+.dockerignore
+/.github
 

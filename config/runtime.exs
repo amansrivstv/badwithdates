@@ -36,7 +36,8 @@ if config_env() == :prod do
     pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
     # For machines with several cores, consider starting multiple pools of `pool_size`
     # pool_count: 4,
-    socket_options: maybe_ipv6
+    socket_options: maybe_ipv6,
+    ssl: true
 
   # The secret key base is used to sign/encrypt cookies and other secrets.
   # A default value is used in config/dev.exs and config/test.exs but you
@@ -67,6 +68,9 @@ if config_env() == :prod do
     ],
     secret_key_base: secret_key_base
 
+  config :badwithdates, Badwithdates.Mailer,
+    adapter: Swoosh.Adapters.Brevo,
+    api_key: System.get_env("BREVO_API_KEY")
   # ## SSL Support
   #
   # To get SSL working, you will need to add the `https` key
