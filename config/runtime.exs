@@ -42,6 +42,10 @@ if config_env() == :prod do
       verify: :verify_none
     ]
 
+  config :badwithdates, Badwithdates.Mailer,
+    adapter: Swoosh.Adapters.Brevo,
+    api_key: System.get_env("BREVO_API_KEY")
+
   # The secret key base is used to sign/encrypt cookies and other secrets.
   # A default value is used in config/dev.exs and config/test.exs but you
   # want to use a different value for prod and you most likely don't want
@@ -71,9 +75,8 @@ if config_env() == :prod do
     ],
     secret_key_base: secret_key_base
 
-  config :badwithdates, Badwithdates.Mailer,
-    adapter: Swoosh.Adapters.Brevo,
-    api_key: System.get_env("BREVO_API_KEY")
+
+  config :swoosh, :api_client, Swoosh.ApiClient.Hackney
 
   # ## SSL Support
   #

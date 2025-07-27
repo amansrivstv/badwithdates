@@ -6,7 +6,7 @@ defmodule Badwithdates.Notifications do
     email =
       new()
       |> to(recipient)
-      |> from({"Badwithdates", "contact@example.com"})
+      |> from({"Bad With Dates", "amansrivstv@gmail.com"})
       |> subject(event)
       |> text_body(message)
 

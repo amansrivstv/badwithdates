@@ -55,6 +55,12 @@ config :badwithdates, BadwithdatesWeb.Endpoint,
 # Configures the mailer
 config :badwithdates, Badwithdates.Mailer, adapter: Swoosh.Adapters.Local
 
+# config :badwithdates, Badwithdates.Mailer,
+#   adapter: Swoosh.Adapters.Brevo,
+#   api_key: "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"
+
+# config :swoosh, :api_client, Swoosh.ApiClient.Hackney
+
 # Configure esbuild (the version is required)
 config :esbuild,
   version: "0.17.11",

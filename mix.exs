@@ -65,7 +65,8 @@ defmodule Badwithdates.MixProject do
       {:timex, "~> 3.7"},
       {:oban, "~> 2.19"},
       {:igniter, "~> 0.5", only: [:dev]},
-      {:oban_web, "~> 2.11"}
+      {:oban_web, "~> 2.11"},
+      {:hackney, "~> 1.18"}
     ]
   end
 
