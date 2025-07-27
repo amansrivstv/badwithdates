@@ -5,7 +5,8 @@ defmodule BadwithdatesWeb.UserLive.Login do
 
   def render(assigns) do
     ~H"""
-    <div class="min-h-screen flex items-center justify-center px-4 py-8">
+    <Layouts.app flash={@flash} current_scope={@current_scope}>
+    <div class="min-h-screen flex justify-center px-4 py-8">
       <div class="w-full max-w-sm space-y-6">
         <div class="text-center">
           <.header>
@@ -105,6 +106,7 @@ defmodule BadwithdatesWeb.UserLive.Login do
         </.form>
       </div>
     </div>
+    </Layouts.app>
     """
   end
 
