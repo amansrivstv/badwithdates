@@ -39,10 +39,7 @@ if config_env() == :prod do
     socket_options: maybe_ipv6,
     ssl: true,
     ssl_opts: [
-      verify: :verify_peer,
-      cacerts: :public_key.cacert_get_all(),
-      server_name_indication: String.to_charlist(hostname),
-      customize_hostname_check: [match_fun: :public_key.pkix_verify_hostname_match_fun(:https)]
+      verify: :verify_none
     ]
 
   # The secret key base is used to sign/encrypt cookies and other secrets.
