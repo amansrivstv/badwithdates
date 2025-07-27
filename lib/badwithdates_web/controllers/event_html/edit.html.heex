@@ -1,6 +1,4 @@
-<Layouts.app flash={@flash} current_scope={@current_scope}>
-  <.header>
-    Edit Event {@event.title}
-  </.header>
-  <.event_form changeset={@changeset} action={~p"/events/#{@event}"} return_to={~p"/events"} />
-</Layouts.app>
+<.header>
+  Edit Event {@event.title}
+</.header>
+<.event_form changeset={@changeset} action={~p"/events/#{@event}"} return_to={~p"/events"} />

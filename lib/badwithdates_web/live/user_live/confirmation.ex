@@ -5,10 +5,12 @@ defmodule BadwithdatesWeb.UserLive.Confirmation do
 
   def render(assigns) do
     ~H"""
-    <Layouts.app flash={@flash} current_scope={@current_scope}>
-      <div class="mx-auto max-w-sm">
+    <div class="min-h-screen flex items-center justify-center px-4 py-8">
+      <div class="w-full max-w-sm space-y-6">
         <div class="text-center">
-          <.header>Welcome {@user.email}</.header>
+          <.header>
+            <p class="text-xl sm:text-2xl break-words">Welcome {@user.email}</p>
+          </.header>
         </div>
 
         <.form
@@ -19,19 +21,25 @@ defmodule BadwithdatesWeb.UserLive.Confirmation do
           phx-submit="submit"
           action={~p"/users/log-in?_action=confirmed"}
           phx-trigger-action={@trigger_submit}
+          class="space-y-4"
         >
           <input type="hidden" name={@form[:token].name} value={@form[:token].value} />
-          <.button
-            name={@form[:remember_me].name}
-            value="true"
-            phx-disable-with="Confirming..."
-            class="btn btn-primary w-full"
-          >
-            Confirm and stay logged in
-          </.button>
-          <.button phx-disable-with="Confirming..." class="btn btn-primary btn-soft w-full mt-2">
-            Confirm and log in only this time
-          </.button>
+          <div class="space-y-3">
+            <.button
+              name={@form[:remember_me].name}
+              value="true"
+              phx-disable-with="Confirming..."
+              class="btn btn-primary w-full h-12 text-base touch-manipulation"
+            >
+              <span class="text-center">Confirm and stay logged in</span>
+            </.button>
+            <.button
+              phx-disable-with="Confirming..."
+              class="btn btn-primary btn-soft w-full h-12 text-base touch-manipulation"
+            >
+              <span class="text-center">Confirm and log in only this time</span>
+            </.button>
+          </div>
         </.form>
 
         <.form
@@ -42,32 +50,44 @@ defmodule BadwithdatesWeb.UserLive.Confirmation do
           phx-mounted={JS.focus_first()}
           action={~p"/users/log-in"}
           phx-trigger-action={@trigger_submit}
+          class="space-y-4"
         >
           <input type="hidden" name={@form[:token].name} value={@form[:token].value} />
           <%= if @current_scope do %>
-            <.button phx-disable-with="Logging in..." class="btn btn-primary w-full">
-              Log in
+            <.button
+              phx-disable-with="Logging in..."
+              class="btn btn-primary w-full h-12 text-base touch-manipulation"
+            >
+              <span class="text-center">Log in</span>
             </.button>
           <% else %>
-            <.button
-              name={@form[:remember_me].name}
-              value="true"
-              phx-disable-with="Logging in..."
-              class="btn btn-primary w-full"
-            >
-              Keep me logged in on this device
-            </.button>
-            <.button phx-disable-with="Logging in..." class="btn btn-primary btn-soft w-full mt-2">
-              Log me in only this time
-            </.button>
+            <div class="space-y-3">
+              <.button
+                name={@form[:remember_me].name}
+                value="true"
+                phx-disable-with="Logging in..."
+                class="btn btn-primary w-full h-12 text-base touch-manipulation"
+              >
+                <span class="text-center leading-tight">Keep me logged in on this device</span>
+              </.button>
+              <.button
+                phx-disable-with="Logging in..."
+                class="btn btn-primary btn-soft w-full h-12 text-base touch-manipulation"
+              >
+                <span class="text-center">Log me in only this time</span>
+              </.button>
+            </div>
           <% end %>
         </.form>
 
-        <p :if={!@user.confirmed_at} class="alert alert-outline mt-8">
-          Tip: If you prefer passwords, you can enable them in the user settings.
-        </p>
+        <div :if={!@user.confirmed_at} class="alert alert-outline text-sm">
+          <p class="break-words leading-relaxed">
+            <strong class="font-medium">Tip:</strong>
+            If you prefer passwords, you can enable them in the user settings.
+          </p>
+        </div>
       </div>
-    </Layouts.app>
+    </div>
     """
   end
 

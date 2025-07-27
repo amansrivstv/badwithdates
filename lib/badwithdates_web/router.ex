@@ -4,7 +4,6 @@ defmodule BadwithdatesWeb.Router do
   import Oban.Web.Router
   import BadwithdatesWeb.UserAuth
 
-
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -45,7 +44,6 @@ defmodule BadwithdatesWeb.Router do
       live_dashboard "/dashboard", metrics: BadwithdatesWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
       oban_dashboard("/oban")
-
     end
   end
 

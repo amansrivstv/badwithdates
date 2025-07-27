@@ -1,111 +1,109 @@
-<Layouts.app flash={@flash} current_scope={@current_scope}>
-  <.header>
-    Upload Events from Excel
-    <:subtitle>Import multiple events at once using an Excel file</:subtitle>
-  </.header>
+<.header>
+  Upload Events from Excel
+  <:subtitle>Import multiple events at once using an Excel file</:subtitle>
+</.header>
 
-  <div class="max-w-2xl mx-auto">
-    <!-- Instructions -->
-    <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
-      <h3 class="text-lg font-medium text-blue-900 mb-3">File Format Requirements</h3>
-      <div class="text-sm text-blue-800 space-y-2">
-        <p>Your Excel file should have the following columns in this exact order:</p>
-        <ol class="list-decimal list-inside space-y-1 ml-4">
-          <li><strong>Title</strong> - The event name</li>
-          <li><strong>Date</strong> - In format YYYY-MM-DD (e.g., 2025-05-27)</li>
-          <li><strong>Category</strong> - Either "birthday" or "anniversary"</li>
-          <li><strong>Description</strong> - Optional event description</li>
-        </ol>
-      </div>
+<div class="max-w-2xl mx-auto">
+  <!-- Instructions -->
+  <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
+    <h3 class="text-lg font-medium text-blue-900 mb-3">File Format Requirements</h3>
+    <div class="text-sm text-blue-800 space-y-2">
+      <p>Your Excel file should have the following columns in this exact order:</p>
+      <ol class="list-decimal list-inside space-y-1 ml-4">
+        <li><strong>Title</strong> - The event name</li>
+        <li><strong>Date</strong> - In format YYYY-MM-DD (e.g., 2025-05-27)</li>
+        <li><strong>Category</strong> - Either "birthday" or "anniversary"</li>
+        <li><strong>Description</strong> - Optional event description</li>
+      </ol>
     </div>
-    
-<!-- Sample Data -->
-    <div class="bg-gray-50 border border-gray-200 rounded-lg p-6 mb-6">
-      <h4 class="text-lg font-medium text-blue-900 mb-3">Sample Data:</h4>
-      <div class="text-sm text-blue-800 space-y-2">
-        <table class="min-b-full text-sm">
-          <thead class="bg-white-100">
-            <tr>
-              <th class="px-3 py-2 text-left">Title</th>
-              <th class="px-3 py-2 text-left">Date</th>
-              <th class="px-3 py-2 text-left">Category</th>
-              <th class="px-3 py-2 text-left">Description</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray-200">
-            <tr>
-              <td class="px-3 py-2">Aman's Birthday</td>
-              <td class="px-3 py-2">1999-07-13</td>
-              <td class="px-3 py-2">birthday</td>
-              <td class="px-3 py-2">Don't forget the cake!</td>
-            </tr>
-            <tr>
-              <td class="px-3 py-2">XYZ Wedding Anniversary</td>
-              <td class="px-3 py-2">2010-08-20</td>
-              <td class="px-3 py-2">anniversary</td>
-              <td class="px-3 py-2">Update: They've been divorced.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    
-<!-- Upload Form -->
-    <.form
-      for={%{}}
-      as={:upload}
-      action={~p"/events/import"}
-      method="post"
-      enctype="multipart/form-data"
-      class="bg-white shadow-sm border border-gray-200 rounded-lg p-6"
-    >
-      <div class="space-y-4">
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">
-            Select Excel File
-          </label>
-          <input
-            type="file"
-            name="upload"
-            accept=".xlsx,.xls"
-            required
-            class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 border border-gray-300 rounded-lg"
-          />
-          <p class="mt-1 text-xs text-gray-500">Supported formats: .xlsx, .xls</p>
-        </div>
-
-        <div class="flex items-center justify-between pt-4">
-          <.link
-            href={~p"/events"}
-            class="inline-flex items-center gap-2 text-gray-600 hover:text-gray-800"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M10 19l-7-7m0 0l7-7m-7 7h18"
-              />
-            </svg>
-            Back to Events
-          </.link>
-
-          <button
-            type="submit"
-            class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg transition-colors duration-200"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-              />
-            </svg>
-            Upload & Import
-          </button>
-        </div>
-      </div>
-    </.form>
   </div>
-</Layouts.app>
+  
+<!-- Sample Data -->
+  <div class="bg-gray-50 border border-gray-200 rounded-lg p-6 mb-6">
+    <h4 class="text-lg font-medium text-blue-900 mb-3">Sample Data:</h4>
+    <div class="text-sm text-blue-800 space-y-2">
+      <table class="min-b-full text-sm">
+        <thead class="bg-white-100">
+          <tr>
+            <th class="px-3 py-2 text-left">Title</th>
+            <th class="px-3 py-2 text-left">Date</th>
+            <th class="px-3 py-2 text-left">Category</th>
+            <th class="px-3 py-2 text-left">Description</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <tr>
+            <td class="px-3 py-2">Aman's Birthday</td>
+            <td class="px-3 py-2">1999-07-13</td>
+            <td class="px-3 py-2">birthday</td>
+            <td class="px-3 py-2">Don't forget the cake!</td>
+          </tr>
+          <tr>
+            <td class="px-3 py-2">XYZ Wedding Anniversary</td>
+            <td class="px-3 py-2">2010-08-20</td>
+            <td class="px-3 py-2">anniversary</td>
+            <td class="px-3 py-2">Update: They've been divorced.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+<!-- Upload Form -->
+  <.form
+    for={%{}}
+    as={:upload}
+    action={~p"/events/import"}
+    method="post"
+    enctype="multipart/form-data"
+    class="bg-white shadow-sm border border-gray-200 rounded-lg p-6"
+  >
+    <div class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          Select Excel File
+        </label>
+        <input
+          type="file"
+          name="upload"
+          accept=".xlsx,.xls"
+          required
+          class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 border border-gray-300 rounded-lg"
+        />
+        <p class="mt-1 text-xs text-gray-500">Supported formats: .xlsx, .xls</p>
+      </div>
+
+      <div class="flex items-center justify-between pt-4">
+        <.link
+          href={~p"/events"}
+          class="inline-flex items-center gap-2 text-gray-600 hover:text-gray-800"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10 19l-7-7m0 0l7-7m-7 7h18"
+            />
+          </svg>
+          Back to Events
+        </.link>
+
+        <button
+          type="submit"
+          class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg transition-colors duration-200"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+            />
+          </svg>
+          Upload & Import
+        </button>
+      </div>
+    </div>
+  </.form>
+</div>
