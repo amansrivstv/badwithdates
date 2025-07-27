@@ -37,7 +37,13 @@ if config_env() == :prod do
     # For machines with several cores, consider starting multiple pools of `pool_size`
     # pool_count: 4,
     socket_options: maybe_ipv6,
-    ssl: true
+    ssl: true,
+    ssl_opts: [
+      verify: :verify_peer,
+      cacerts: :public_key.cacert_get_all(),
+      server_name_indication: String.to_charlist(hostname),
+      customize_hostname_check: [match_fun: :public_key.pkix_verify_hostname_match_fun(:https)]
+    ]
 
   # The secret key base is used to sign/encrypt cookies and other secrets.
   # A default value is used in config/dev.exs and config/test.exs but you
@@ -71,6 +77,7 @@ if config_env() == :prod do
   config :badwithdates, Badwithdates.Mailer,
     adapter: Swoosh.Adapters.Brevo,
     api_key: System.get_env("BREVO_API_KEY")
+
   # ## SSL Support
   #
   # To get SSL working, you will need to add the `https` key
@@ -109,9 +116,9 @@ if config_env() == :prod do
   # Also, you may need to configure the Swoosh API client of your choice if you
   # are not using SMTP. Here is an example of the configuration:
   #
-        # config :badwithdates, Badwithdates.Mailer,
-        #   adapter: Swoosh.Adapters.Brevo,
-        #   api_key: System.get_env("BREVO_API_KEY")
+  # config :badwithdates, Badwithdates.Mailer,
+  #   adapter: Swoosh.Adapters.Brevo,
+  #   api_key: System.get_env("BREVO_API_KEY")
 
   #
   # For this example you need include a HTTP client required by Swoosh API client.
