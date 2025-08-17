@@ -4,9 +4,28 @@ defmodule BadwithdatesWeb.EventController do
   alias Badwithdates.Events
   alias Badwithdates.Events.Event
 
-  def index(conn, _params) do
-    events = Events.list_events(conn.assigns.current_scope)
-    render(conn, :index, events: events)
+  def index(conn, params) do
+    # Handle search and filter parameters
+    filters = %{}
+    filters = if params["search"] && String.trim(params["search"]) != "" do
+      Map.put(filters, :search, String.trim(params["search"]))
+    else
+      filters
+    end
+
+    filters = if params["category"] && params["category"] != "all" do
+      Map.put(filters, :category, params["category"])
+    else
+      filters
+    end
+
+    events = Events.list_events(conn.assigns.current_scope, filters)
+
+    render(conn, :index,
+      events: events,
+      search_query: params["search"] || "",
+      selected_category: params["category"] || "all"
+    )
   end
 
   def new(conn, _params) do
@@ -19,6 +38,9 @@ defmodule BadwithdatesWeb.EventController do
   end
 
   def create(conn, %{"event" => event_params}) do
+    # Process tags from comma-separated string to list
+    event_params = process_event_params(event_params)
+
     case Events.create_event(conn.assigns.current_scope, event_params) do
       {:ok, event} ->
         conn
@@ -43,6 +65,9 @@ defmodule BadwithdatesWeb.EventController do
 
   def update(conn, %{"id" => id, "event" => event_params}) do
     event = Events.get_event!(conn.assigns.current_scope, id)
+
+    # Process tags from comma-separated string to list
+    event_params = process_event_params(event_params)
 
     case Events.update_event(conn.assigns.current_scope, event, event_params) do
       {:ok, event} ->
@@ -126,5 +151,19 @@ defmodule BadwithdatesWeb.EventController do
     conn
     |> put_flash(:error, "Please select a file to upload")
     |> render(:import_form)
+  end
+
+  # Helper function to process event parameters
+  defp process_event_params(params) do
+    case params do
+      %{"tags" => tags} when is_binary(tags) ->
+        tags_list = tags
+                    |> String.split(",")
+                    |> Enum.map(&String.trim/1)
+                    |> Enum.filter(&(&1 != ""))
+        Map.put(params, "tags", tags_list)
+      _ ->
+        params
+    end
   end
 end

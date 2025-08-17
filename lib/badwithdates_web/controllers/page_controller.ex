@@ -2,9 +2,14 @@ defmodule BadwithdatesWeb.PageController do
   use BadwithdatesWeb, :controller
 
   def home(conn, _params) do
-    # The home page is often custom made,
-    # so skip the default app layout.
-    render(conn, :home, layout: false)
+    if conn.assigns[:current_scope] do
+      # Redirect authenticated users to dashboard
+      redirect(conn, to: ~p"/dashboard")
+    else
+      # The home page is often custom made,
+      # so skip the default app layout.
+      render(conn, :home, layout: false)
+    end
   end
 
   def resume(conn, _params) do

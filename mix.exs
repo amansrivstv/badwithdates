@@ -66,7 +66,13 @@ defmodule Badwithdates.MixProject do
       {:oban, "~> 2.19"},
       {:igniter, "~> 0.5", only: [:dev]},
       {:oban_web, "~> 2.11"},
-      {:hackney, "~> 1.18"}
+      {:hackney, "~> 1.18"},
+      # New dependencies for enhanced features
+      {:cachex, "~> 3.6"},
+      {:quantum, "~> 3.0"},
+      {:plug_attack, "~> 0.4"},
+      {:guardian, "~> 2.3"},
+      {:cors_plug, "~> 3.0"}
     ]
   end
 

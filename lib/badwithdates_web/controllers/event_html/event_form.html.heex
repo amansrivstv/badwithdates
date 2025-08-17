@@ -1,16 +1,87 @@
-<.form :let={f} for={@changeset} action={@action}>
-  <.input field={f[:title]} type="text" label="Title" />
-  <.input field={f[:date]} type="date" label="Date" />
-  <.input
-    field={f[:category]}
-    type="select"
-    label="Category"
-    prompt="Choose a value"
-    options={Ecto.Enum.values(Badwithdates.Events.Event, :category)}
-  />
-  <.input field={f[:description]} type="textarea" label="Description" />
-  <footer>
-    <.button variant="primary">Save Event</.button>
-    <.button :if={@return_to} href={@return_to}>Cancel</.button>
-  </footer>
+<.form :let={f} for={@changeset} action={@action} class="space-y-6">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Title -->
+    <div class="md:col-span-2">
+      <.input field={f[:title]} type="text" label="Title" required />
+    </div>
+
+    <!-- Date and Category -->
+    <div>
+      <.input field={f[:date]} type="date" label="Date" required />
+    </div>
+
+    <div>
+      <.input field={f[:category]} type="select" label="Category" required options={[
+        {"Birthday", "birthday"},
+        {"Anniversary", "anniversary"},
+        {"Graduation", "graduation"},
+        {"Retirement", "retirement"},
+        {"Wedding", "wedding"},
+        {"Holiday", "holiday"},
+        {"Work", "work"},
+        {"Personal", "personal"},
+        {"Custom", "custom"}
+      ]} />
+    </div>
+
+    <!-- Priority and Location -->
+    <div>
+      <.input field={f[:priority]} type="select" label="Priority" options={[
+        {"Low", 1},
+        {"Medium", 2},
+        {"High", 3},
+        {"Very High", 4},
+        {"Critical", 5}
+      ]} />
+    </div>
+
+    <div>
+      <.input field={f[:location]} type="text" label="Location" placeholder="e.g., New York, NY" />
+    </div>
+
+    <!-- Photo URL -->
+    <div class="md:col-span-2">
+      <.input field={f[:photo_url]} type="url" label="Photo URL" placeholder="https://example.com/photo.jpg" />
+    </div>
+
+    <!-- Tags -->
+    <div class="md:col-span-2">
+      <.input field={f[:tags]} type="text" label="Tags" placeholder="family, friends, work (comma separated)" />
+      <p class="mt-1 text-sm text-gray-500">Enter tags separated by commas (max 10 tags)</p>
+    </div>
+
+    <!-- Description -->
+    <div class="md:col-span-2">
+      <.input field={f[:description]} type="textarea" label="Description" rows={3} />
+    </div>
+
+    <!-- Notes -->
+    <div class="md:col-span-2">
+      <.input field={f[:notes]} type="textarea" label="Notes" rows={4} placeholder="Additional notes, gift ideas, etc." />
+    </div>
+
+    <!-- Settings -->
+    <div class="md:col-span-2">
+      <div class="space-y-4">
+        <div class="flex items-center">
+          <.input field={f[:recurring]} type="checkbox" label="Recurring Event" />
+        </div>
+        <div class="flex items-center">
+          <.input field={f[:is_public]} type="checkbox" label="Public Event (can be shared)" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-end space-x-3">
+    <.link
+      navigate={~p"/events"}
+      class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+    >
+      Cancel
+    </.link>
+    <.button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+      <%= if @changeset.data.id, do: "Update Event", else: "Create Event" %>
+    </.button>
+  </div>
 </.form>

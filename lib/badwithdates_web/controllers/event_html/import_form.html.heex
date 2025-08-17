@@ -3,17 +3,21 @@
   <:subtitle>Import multiple events at once using an Excel file</:subtitle>
 </.header>
 
-<div class="max-w-2xl mx-auto">
+<div class="max-w-4xl mx-auto">
   <!-- Instructions -->
   <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
     <h3 class="text-lg font-medium text-blue-900 mb-3">File Format Requirements</h3>
     <div class="text-sm text-blue-800 space-y-2">
       <p>Your Excel file should have the following columns in this exact order:</p>
       <ol class="list-decimal list-inside space-y-1 ml-4">
-        <li><strong>Title</strong> - The event name</li>
-        <li><strong>Date</strong> - In format YYYY-MM-DD (e.g., 2025-05-27)</li>
-        <li><strong>Category</strong> - Either "birthday" or "anniversary"</li>
+        <li><strong>Title</strong> - The event name (required)</li>
+        <li><strong>Date</strong> - In format YYYY-MM-DD (e.g., 2025-05-27) (required)</li>
+        <li><strong>Category</strong> - Event category (birthday, anniversary, graduation, retirement, wedding, holiday, work, personal, custom)</li>
         <li><strong>Description</strong> - Optional event description</li>
+        <li><strong>Priority</strong> - Priority level (1-5, where 1 is highest priority)</li>
+        <li><strong>Tags</strong> - Comma-separated tags (e.g., "family, friends, work")</li>
+        <li><strong>Location</strong> - Event location</li>
+        <li><strong>Notes</strong> - Additional notes</li>
       </ol>
     </div>
   </div>
@@ -22,30 +26,68 @@
   <div class="bg-gray-50 border border-gray-200 rounded-lg p-6 mb-6">
     <h4 class="text-lg font-medium text-blue-900 mb-3">Sample Data:</h4>
     <div class="text-sm text-blue-800 space-y-2">
-      <table class="min-b-full text-sm">
-        <thead class="bg-white-100">
-          <tr>
-            <th class="px-3 py-2 text-left">Title</th>
-            <th class="px-3 py-2 text-left">Date</th>
-            <th class="px-3 py-2 text-left">Category</th>
-            <th class="px-3 py-2 text-left">Description</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-200">
-          <tr>
-            <td class="px-3 py-2">Aman's Birthday</td>
-            <td class="px-3 py-2">1999-07-13</td>
-            <td class="px-3 py-2">birthday</td>
-            <td class="px-3 py-2">Don't forget the cake!</td>
-          </tr>
-          <tr>
-            <td class="px-3 py-2">XYZ Wedding Anniversary</td>
-            <td class="px-3 py-2">2010-08-20</td>
-            <td class="px-3 py-2">anniversary</td>
-            <td class="px-3 py-2">Update: They've been divorced.</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-sm">
+          <thead class="bg-white">
+            <tr>
+              <th class="px-3 py-2 text-left border-b">Title</th>
+              <th class="px-3 py-2 text-left border-b">Date</th>
+              <th class="px-3 py-2 text-left border-b">Category</th>
+              <th class="px-3 py-2 text-left border-b">Description</th>
+              <th class="px-3 py-2 text-left border-b">Priority</th>
+              <th class="px-3 py-2 text-left border-b">Tags</th>
+              <th class="px-3 py-2 text-left border-b">Location</th>
+              <th class="px-3 py-2 text-left border-b">Notes</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <tr>
+              <td class="px-3 py-2">Aman's Birthday</td>
+              <td class="px-3 py-2">1999-07-13</td>
+              <td class="px-3 py-2">birthday</td>
+              <td class="px-3 py-2">Don't forget the cake!</td>
+              <td class="px-3 py-2">1</td>
+              <td class="px-3 py-2">family, friends</td>
+              <td class="px-3 py-2">Home</td>
+              <td class="px-3 py-2">Loves chocolate cake</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2">XYZ Wedding Anniversary</td>
+              <td class="px-3 py-2">2010-08-20</td>
+              <td class="px-3 py-2">anniversary</td>
+              <td class="px-3 py-2">Update: They've been divorced.</td>
+              <td class="px-3 py-2">3</td>
+              <td class="px-3 py-2">family, important</td>
+              <td class="px-3 py-2">Restaurant</td>
+              <td class="px-3 py-2">Check if still together</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2">Team Meeting</td>
+              <td class="px-3 py-2">2025-01-15</td>
+              <td class="px-3 py-2">work</td>
+              <td class="px-3 py-2">Quarterly review</td>
+              <td class="px-3 py-2">2</td>
+              <td class="px-3 py-2">work, meeting</td>
+              <td class="px-3 py-2">Office</td>
+              <td class="px-3 py-2">Prepare presentation</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Import Options -->
+  <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6 mb-6">
+    <h4 class="text-lg font-medium text-yellow-900 mb-3">Import Options</h4>
+    <div class="text-sm text-yellow-800 space-y-2">
+      <p><strong>Default Values:</strong> If any column is empty, the following defaults will be used:</p>
+      <ul class="list-disc list-inside space-y-1 ml-4">
+        <li><strong>Category:</strong> birthday</li>
+        <li><strong>Priority:</strong> 3 (medium)</li>
+        <li><strong>Recurring:</strong> true (events will repeat yearly)</li>
+        <li><strong>Public:</strong> false (events are private by default)</li>
+      </ul>
     </div>
   </div>
   
